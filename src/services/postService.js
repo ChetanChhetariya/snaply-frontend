@@ -16,3 +16,17 @@ export const createPost = async (formData, token) => {
   });
   return response.data;
 };
+
+export const likePost = async (postId, token) => {
+  const response = await api.post(`/posts/${postId}/like`, {}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const unlikePost = async (postId, token) => {
+  const response = await api.delete(`/posts/${postId}/like`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
