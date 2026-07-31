@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { getFeed, likePost, unlikePost } from '../services/postService';
+import '../components/common/post/PostCard.css';
 
 function Feed() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState('');
-  const [likedPosts, setLikedPosts] = useState([]);
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -20,31 +20,36 @@ function Feed() {
     fetchFeed();
   }, []);
 
-  const handleLike = async (postId) => {
+  const handleLike = async (postId, likedByMe) => {
     const token = localStorage.getItem('token');
 
-    if (likedPosts.includes(postId)) {
+    if (likedByMe) {
       await unlikePost(postId, token);
-      setLikedPosts(likedPosts.filter((id) => id !== postId));
     } else {
       await likePost(postId, token);
-      setLikedPosts([...likedPosts, postId]);
     }
+
+    setPosts(
+      posts.map((post) =>
+        post.id === postId ? { ...post, liked_by_me: !likedByMe } : post
+      )
+    );
   };
 
   return (
-    <div>
-      <h2>Feed</h2>
+    <div className="feed">
       {error && <p>{error}</p>}
 
       {posts.map((post) => (
-        <div key={post.id}>
-          <p>{post.username}</p>
-          <img src={`http://localhost:5000${post.image_url}`} alt={post.caption} width="300" />
-          <p>{post.caption}</p>
-          <button onClick={() => handleLike(post.id)}>
-            {likedPosts.includes(post.id) ? 'Unlike' : 'Like'}
-          </button>
+        <div className="post-card" key={post.id}>
+          <img src={`http://localhost:5000${post.image_url}`} alt={post.caption} />
+          <div className="post-card-body">
+            <p className="post-card-username">{post.username}</p>
+            <p className="post-card-caption">{post.caption}</p>
+            <button onClick={() => handleLike(post.id, post.liked_by_me)}>
+              {post.liked_by_me ? 'Unlike' : 'Like'}
+            </button>
+          </div>
         </div>
       ))}
     </div>

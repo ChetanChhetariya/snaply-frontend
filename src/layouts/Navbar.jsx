@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -10,15 +11,17 @@ function Navbar() {
   };
 
   return (
-    <nav>
+    <nav className="navbar">
       {token ? (
         <>
-          <Link to="/feed">Feed</Link> | <Link to="/create-post">Create Post</Link> |{' '}
+          <Link to="/feed">Feed</Link>
+          <Link to="/create-post">Create Post</Link>
           <button onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <>
-          <Link to="/login">Login</Link> | <Link to="/signup">Sign Up</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/signup">Sign Up</Link>
         </>
       )}
     </nav>

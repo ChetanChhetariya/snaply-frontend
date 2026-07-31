@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createPost } from '../services/postService';
+import '../components/common/AuthForm.css';
 
 function CreatePost() {
   const [caption, setCaption] = useState('');
@@ -32,7 +33,7 @@ function CreatePost() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="auth-form" onSubmit={handleSubmit}>
       <h2>Create Post</h2>
 
       {error && <p>{error}</p>}

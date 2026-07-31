@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { login } from '../services/authService';
+import '../components/common/AuthForm.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -8,37 +9,20 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-
     try {
       const data = await login(email, password);
       localStorage.setItem('token', data.token);
-      console.log('Logged in:', data.user);
-    } catch (err) {
+    } catch {
       setError('Invalid email or password');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="auth-form" onSubmit={handleSubmit}>
       <h2>Login</h2>
-
       {error && <p>{error}</p>}
-
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
+      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
       <button type="submit">Login</button>
     </form>
   );

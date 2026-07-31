@@ -1,0 +1,46 @@
+.feed {
+  max-width: 480px;
+  margin: 2rem auto;
+}
+
+.post-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.post-card img {
+  width: 100%;
+  display: block;
+}
+
+.post-card-body {
+  padding: 0.9rem 1rem;
+}
+
+.post-card-username {
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.post-card-caption {
+  color: var(--color-text-muted);
+  margin: 0.5rem 0;
+}
+
+.post-card button {
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.post-card button:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
