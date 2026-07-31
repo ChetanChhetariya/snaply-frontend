@@ -1,17 +1,22 @@
 import { useState } from 'react';
-import { login } from '../services/authService';
+import { login as loginApi } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import '../components/common/AuthForm.css';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await login(email, password);
-      localStorage.setItem('token', data.token);
+      const data = await loginApi(email, password);
+      login(data.token);
+      navigate('/feed');
     } catch {
       setError('Invalid email or password');
     }
