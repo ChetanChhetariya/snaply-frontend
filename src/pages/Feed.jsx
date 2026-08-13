@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getFeed, likePost, unlikePost, addComment, getComments } from '../services/postService';
 import { followUser, unfollowUser } from '../services/authService';
 import { getCurrentUserId } from '../utils/auth';
+import { Link } from 'react-router-dom';
 import '../components/common/post/PostCard.css';
 
 function Feed() {
@@ -91,7 +92,9 @@ function Feed() {
           <div className="post-card-header">
             <div className="post-card-info">
               <div className="post-card-avatar">{post.username.charAt(0).toUpperCase()}</div>
-              <p className="post-card-username">{post.username}</p>
+              <Link to={`/profile/${post.user_id}`} className="post-card-username">
+                {post.username}
+              </Link>
             </div>
             {post.user_id !== currentUserId && (
               <button className="follow-btn" onClick={() => handleFollow(post.user_id, post.followed_by_me)}>

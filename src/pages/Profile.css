@@ -1,0 +1,67 @@
+.profile {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-info h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.2rem;
+}
+
+.profile-post-count {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.profile-follow-btn {
+  margin-left: auto;
+  background-color: transparent;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.profile-follow-btn:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
+
+.profile-grid-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+}

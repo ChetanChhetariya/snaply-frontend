@@ -6,6 +6,7 @@ import CreatePost from './pages/CreatePost';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Navbar from './layouts/Navbar';
 import { AuthProvider } from './context/AuthContext';
+import Profile from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -29,6 +30,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreatePost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/:userId"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />
