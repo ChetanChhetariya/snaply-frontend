@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getFeed, likePost, unlikePost, addComment, getComments } from '../services/postService';
+import { followUser, unfollowUser } from '../services/authService';
+import { getCurrentUserId } from '../utils/auth';
 import '../components/common/post/PostCard.css';
 
 function Feed() {
@@ -7,6 +9,8 @@ function Feed() {
   const [error, setError] = useState('');
   const [comments, setComments] = useState({});
   const [commentText, setCommentText] = useState({});
+  const [openComments, setOpenComments] = useState({});
+  const currentUserId = getCurrentUserId();
 
   useEffect(() => {
     const fetchFeed = async () => {
@@ -38,10 +42,32 @@ function Feed() {
     );
   };
 
-  const loadComments = async (postId) => {
+  const handleFollow = async (userId, followedByMe) => {
     const token = localStorage.getItem('token');
-    const data = await getComments(postId, token);
-    setComments({ ...comments, [postId]: data.comments });
+
+    if (followedByMe) {
+      await unfollowUser(userId, token);
+    } else {
+      await followUser(userId, token);
+    }
+
+    setPosts(
+      posts.map((post) =>
+        post.user_id === userId ? { ...post, followed_by_me: !followedByMe } : post
+      )
+    );
+  };
+
+  const handleToggleComments = async (postId) => {
+    const isOpen = openComments[postId];
+
+    if (!isOpen && !comments[postId]) {
+      const token = localStorage.getItem('token');
+      const data = await getComments(postId, token);
+      setComments({ ...comments, [postId]: data.comments });
+    }
+
+    setOpenComments({ ...openComments, [postId]: !isOpen });
   };
 
   const handleCommentSubmit = async (postId) => {
@@ -51,7 +77,9 @@ function Feed() {
 
     await addComment(postId, text, token);
     setCommentText({ ...commentText, [postId]: '' });
-    loadComments(postId);
+
+    const data = await getComments(postId, token);
+    setComments({ ...comments, [postId]: data.comments });
   };
 
   return (
@@ -61,39 +89,50 @@ function Feed() {
       {posts.map((post) => (
         <div className="post-card" key={post.id}>
           <div className="post-card-header">
-            <div className="post-card-avatar">{post.username.charAt(0).toUpperCase()}</div>
-            <p className="post-card-username">{post.username}</p>
+            <div className="post-card-info">
+              <div className="post-card-avatar">{post.username.charAt(0).toUpperCase()}</div>
+              <p className="post-card-username">{post.username}</p>
+            </div>
+            {post.user_id !== currentUserId && (
+              <button className="follow-btn" onClick={() => handleFollow(post.user_id, post.followed_by_me)}>
+                {post.followed_by_me ? 'Following' : 'Follow'}
+              </button>
+            )}
           </div>
+
           <img src={`http://localhost:5000${post.image_url}`} alt={post.caption} />
+
           <div className="post-card-body">
             <p className="post-card-caption">{post.caption}</p>
-            <button onClick={() => handleLike(post.id, post.liked_by_me)}>
-              {post.liked_by_me ? 'Unlike' : 'Like'}
-            </button>
 
-            <div className="comments-section">
-              {comments[post.id] ? (
-                comments[post.id].map((comment) => (
+            <div className="post-actions">
+              <button className="action-btn" onClick={() => handleLike(post.id, post.liked_by_me)}>
+                {post.liked_by_me ? 'Unlike' : 'Like'}
+              </button>
+              <button className="action-btn" onClick={() => handleToggleComments(post.id)}>
+                Comment
+              </button>
+            </div>
+
+            {openComments[post.id] && (
+              <div className="comments-section">
+                {comments[post.id] && comments[post.id].map((comment) => (
                   <p key={comment.id} className="comment-line">
                     <strong>{comment.username}</strong> {comment.text}
                   </p>
-                ))
-              ) : (
-                <button className="view-comments-btn" onClick={() => loadComments(post.id)}>
-                  View comments
-                </button>
-              )}
+                ))}
 
-              <div className="comment-input-row">
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  value={commentText[post.id] || ''}
-                  onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
-                />
-                <button onClick={() => handleCommentSubmit(post.id)}>Post</button>
+                <div className="comment-input-row">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={commentText[post.id] || ''}
+                    onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                  />
+                  <button onClick={() => handleCommentSubmit(post.id)}>Post</button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       ))}
