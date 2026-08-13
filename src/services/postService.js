@@ -30,3 +30,16 @@ export const unlikePost = async (postId, token) => {
   });
   return response.data;
 };
+export const addComment = async (postId, text, token) => {
+  const response = await api.post(`/posts/${postId}/comments`, { text }, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getComments = async (postId, token) => {
+  const response = await api.get(`/posts/${postId}/comments`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
