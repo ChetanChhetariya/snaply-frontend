@@ -9,6 +9,7 @@ export const signup = async (username, email, password) => {
   const response = await api.post('/users/signup', { username, email, password });
   return response.data;
 };
+
 export const followUser = async (userId, token) => {
   const response = await api.post(`/users/${userId}/follow`, {}, {
     headers: { Authorization: `Bearer ${token}` },

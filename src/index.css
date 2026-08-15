@@ -1,34 +1,52 @@
-:root {
-  --color-bg: #0f0f13;
-  --color-surface: #1a1a20;
-  --color-primary: #ff4d6d;
-  --color-text: #f2f2f2;
-  --color-text-muted: #9a9aa5;
-  --color-border: #2a2a32;
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #ff3366;
+  --color-brand-hover: #ff4d7a;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-}
-
-input, button {
-  font-family: inherit;
-  font-size: 1rem;
-}
-
 a {
-  color: var(--color-primary);
   text-decoration: none;
+  color: inherit;
 }
 
-h2 {
-  font-weight: 700;
-  letter-spacing: -0.02em;
+input, button, textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+  border-radius: 9999px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
 }
