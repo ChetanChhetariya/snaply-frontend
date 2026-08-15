@@ -1,44 +1,35 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Feed from "./pages/Feed";
 import CreatePost from "./pages/CreatePost";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import Navbar from "./layouts/Navbar";
-import { AuthProvider } from "./context/AuthContext";
 import Profile from "./pages/ProfilePage";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import AppLayout from "./layouts/AppLayout";
+
+import { AuthProvider } from "./context/AuthContext";
 
 import "./App.css";
 
-function AppContent() {
-  const location = useLocation();
-
-  const isPublicPage =
-    location.pathname === "/login" ||
-    location.pathname === "/signup";
-
+function App() {
   return (
-    <div className="app">
-      <Navbar />
-
-      <div
-        className={
-          isPublicPage
-            ? "main-content pt-16"
-            : "main-content md:pl-60 pb-16 md:pb-0"
-        }
-      >
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
+          {/* Public pages */}
           <Route path="/login" element={<Login />} />
-
           <Route path="/signup" element={<Signup />} />
 
+          {/* Authenticated application */}
           <Route
             path="/feed"
             element={
               <ProtectedRoute>
-                <Feed />
+                <AppLayout>
+                  <Feed />
+                </AppLayout>
               </ProtectedRoute>
             }
           />
@@ -47,7 +38,9 @@ function AppContent() {
             path="/create-post"
             element={
               <ProtectedRoute>
-                <CreatePost />
+                <AppLayout>
+                  <CreatePost />
+                </AppLayout>
               </ProtectedRoute>
             }
           />
@@ -56,21 +49,13 @@ function AppContent() {
             path="/profile/:userId"
             element={
               <ProtectedRoute>
-                <Profile />
+                <AppLayout>
+                  <Profile />
+                </AppLayout>
               </ProtectedRoute>
             }
           />
         </Routes>
-      </div>
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
       </BrowserRouter>
     </AuthProvider>
   );
