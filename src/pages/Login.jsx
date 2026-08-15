@@ -31,10 +31,6 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-white/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.06)] border border-slate-100 rounded-3xl p-8">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-rose-500 to-amber-500 flex items-center justify-center mx-auto mb-5">
-          <span className="text-white font-bold text-lg">S</span>
-        </div>
-
         <h2 className="text-xl font-bold text-slate-900 text-center mb-6">Welcome back</h2>
 
         {error && (

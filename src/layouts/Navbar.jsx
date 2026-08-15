@@ -31,14 +31,11 @@ function Navbar() {
         >
           Snaply
         </Link>
-        <div className="ml-auto flex items-center gap-5">
+        <div className="ml-auto flex items-center gap-6">
           <Link to="/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
             Log in
           </Link>
-          <Link
-            to="/signup"
-            className="text-sm font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-rose-500 to-amber-500 text-white active:scale-95 transition-transform"
-          >
+          <Link to="/signup" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
             Sign up
           </Link>
         </div>
@@ -48,7 +45,6 @@ function Navbar() {
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="hidden md:flex fixed top-0 left-0 h-screen w-60 flex-col border-r border-slate-100 bg-white/70 backdrop-blur-md px-4 py-6 z-50">
         <Link
           to="/feed"
@@ -83,7 +79,6 @@ function Navbar() {
         </button>
       </aside>
 
-      {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-50 flex items-center justify-around">
         {navItems.map(({ path, label, icon: Icon }) => (
           <Link
