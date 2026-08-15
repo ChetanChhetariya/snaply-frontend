@@ -44,7 +44,6 @@ function Signup() {
 
   return (
     <main className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-app-background px-4 py-12 sm:px-6 lg:py-16">
-      {/* Decorative background elements */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-rose-200/30 blur-3xl"
@@ -113,10 +112,8 @@ function Signup() {
             </div>
           </section>
 
-          {/* Signup card */}
           <section className="w-full">
             <div className="mx-auto w-full max-w-md rounded-[28px] border border-border bg-white p-6 shadow-card sm:p-8">
-              {/* Logo */}
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-secondary shadow-md">
                   <span className="text-xl font-black text-white">S</span>
@@ -135,7 +132,6 @@ function Signup() {
                 </p>
               </div>
 
-              {/* Error */}
               {error && (
                 <div
                   role="alert"
@@ -145,7 +141,6 @@ function Signup() {
                 </div>
               )}
 
-              {/* Success */}
               {success && (
                 <div
                   role="status"
@@ -170,12 +165,10 @@ function Signup() {
                 </div>
               )}
 
-              {/* Form */}
               <form
                 onSubmit={handleSubmit}
                 className="mt-7 flex flex-col gap-5"
               >
-                {/* Username */}
                 <div>
                   <label
                     htmlFor="username"
@@ -203,7 +196,6 @@ function Signup() {
                   </div>
                 </div>
 
-                {/* Email */}
                 <div>
                   <label
                     htmlFor="email"
@@ -231,7 +223,6 @@ function Signup() {
                   </div>
                 </div>
 
-                {/* Password */}
                 <div>
                   <label
                     htmlFor="password"
@@ -274,7 +265,6 @@ function Signup() {
                   </div>
                 </div>
 
-                {/* Submit */}
                 <Button
                   type="submit"
                   loading={loading}
@@ -289,7 +279,6 @@ function Signup() {
                 </Button>
               </form>
 
-              {/* Login link */}
               <div className="mt-7 border-t border-border pt-6 text-center">
                 <p className="text-sm text-text-secondary">
                   Already have an account?{" "}

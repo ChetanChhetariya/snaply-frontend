@@ -43,7 +43,7 @@ function Login() {
 
   return (
     <main className="relative min-h-[calc(100vh-72px)] overflow-hidden bg-app-background px-4 py-10 sm:px-6 lg:py-16">
-      {/* Decorative background elements */}
+  
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-32 -top-32 h-80 w-80 rounded-full bg-rose-200/30 blur-3xl"
@@ -61,7 +61,6 @@ function Login() {
 
       <div className="relative mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-6xl items-center justify-center">
         <div className="grid w-full items-center gap-12 lg:grid-cols-[1fr_420px] lg:gap-20">
-          {/* Left brand section */}
           <section className="hidden lg:block">
             <div className="max-w-xl">
               <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-text-secondary shadow-soft">
@@ -112,10 +111,9 @@ function Login() {
             </div>
           </section>
 
-          {/* Login card */}
           <section className="w-full">
             <div className="mx-auto w-full max-w-md rounded-[28px] border border-border bg-white p-6 shadow-card sm:p-8">
-              {/* Logo */}
+              
               <div className="flex flex-col items-center text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-secondary shadow-md">
                   <span className="text-xl font-black text-white">S</span>
@@ -134,7 +132,6 @@ function Login() {
                 </p>
               </div>
 
-              {/* Error */}
               {error && (
                 <div
                   role="alert"
@@ -144,12 +141,11 @@ function Login() {
                 </div>
               )}
 
-              {/* Form */}
               <form
                 onSubmit={handleSubmit}
                 className="mt-7 flex flex-col gap-5"
               >
-                {/* Email */}
+
                 <div>
                   <label
                     htmlFor="email"
@@ -177,7 +173,6 @@ function Login() {
                   </div>
                 </div>
 
-                {/* Password */}
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <label
@@ -222,7 +217,6 @@ function Login() {
                   </div>
                 </div>
 
-                {/* Submit */}
                 <Button
                   type="submit"
                   loading={loading}
@@ -235,7 +229,6 @@ function Login() {
                 </Button>
               </form>
 
-              {/* Signup */}
               <div className="mt-7 border-t border-border pt-6 text-center">
                 <p className="text-sm text-text-secondary">
                   Don't have an account?{" "}

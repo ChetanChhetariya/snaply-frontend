@@ -71,7 +71,7 @@ function Profile() {
             </span>
           </div>
 
-          <p className="profile-bio">{/* Bio will be added when backend supports it */}</p>
+          <p className="profile-bio">{/* Bio will be added later*/}</p>
         </div>
       </div>
 
