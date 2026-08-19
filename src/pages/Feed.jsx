@@ -104,6 +104,10 @@ function Feed() {
     });
   };
 
+  const handleCommentTextChange = (postId, value) => {
+    setCommentText({ ...commentText, [postId]: value });
+  };
+
   const handleCommentSubmit = async (postId) => {
     const token = localStorage.getItem("token");
     const text = commentText[postId];
@@ -126,8 +130,8 @@ function Feed() {
   };
 
   return (
-    <div className="feed">
-      {error && <p className="feed-error">{error}</p>}
+    <div className="max-w-[490px] mx-auto px-4 py-6">
+      {error && <p className="text-rose-500 text-sm mb-4">{error}</p>}
 
       {posts.map((post) => (
         <div className="post-card" key={post.id}>
