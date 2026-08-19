@@ -1,30 +1,61 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Feed from './pages/Feed';
-import CreatePost from './pages/CreatePost';
-import ProtectedRoute from './routes/ProtectedRoute';
-import Navbar from './layouts/Navbar';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Feed from "./pages/Feed";
+import CreatePost from "./pages/CreatePost";
 import Profile from "./pages/ProfilePage";
-import './App.css';
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import AppLayout from "./layouts/AppLayout";
+
+import { AuthProvider } from "./context/AuthContext";
+
+import "./App.css";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="app">
-          <Navbar />
-          <div className="main-content md:pl-60 pb-16 md:pb-0">
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
-              <Route path="/create-post" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
-              <Route path="/profile/:userId" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            </Routes>
-          </div>
-        </div>
+        <Routes>
+          {/* Public pages */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Authenticated application */}
+          <Route
+            path="/feed"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Feed />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/create-post"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <CreatePost />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile/:userId"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Profile />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );

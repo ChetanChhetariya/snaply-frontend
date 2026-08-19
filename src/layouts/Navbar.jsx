@@ -1,98 +1,129 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Home, PlusSquare, User, LogOut } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { getCurrentUserId } from '../utils/Auth';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, PlusSquare, User, LogOut } from "lucide-react";
+
+import { useAuth } from "../context/AuthContext";
+import { getCurrentUserId } from "../utils/Auth";
 
 function Navbar() {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { token, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const { logout } = useAuth();
   const currentUserId = getCurrentUserId();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const navItems = [
+    {
+      path: "/feed",
+      label: "Home",
+      icon: Home,
+    },
+    {
+      path: "/create-post",
+      label: "Create",
+      icon: PlusSquare,
+    },
+    {
+      path: `/profile/${currentUserId}`,
+      label: "Profile",
+      icon: User,
+    },
+  ];
 
   const isActive = (path) => location.pathname.startsWith(path);
 
-  const navItems = [
-    { path: '/feed', label: 'Feed', icon: Home },
-    { path: '/create-post', label: 'Create', icon: PlusSquare },
-    { path: `/profile/${currentUserId}`, label: 'Profile', icon: User },
-  ];
-
-  if (!token) {
-    return (
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 z-50 flex items-center px-6">
-        <Link
-          to="/"
-          className="text-2xl font-extrabold bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 bg-clip-text text-transparent"
-        >
-          Snaply
-        </Link>
-        <div className="ml-auto flex items-center gap-6">
-          <Link to="/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
-            Log in
-          </Link>
-          <Link to="/signup" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">
-            Sign up
-          </Link>
-        </div>
-      </nav>
-    );
-  }
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <>
-      <aside className="hidden md:flex fixed top-0 left-0 h-screen w-60 flex-col border-r border-slate-100 bg-white/70 backdrop-blur-md px-4 py-6 z-50">
+      {/* Desktop Sidebar */}
+      <aside className="fixed left-0 top-0 z-50 hidden h-screen w-60 border-r border-border bg-white px-4 py-6 md:flex md:flex-col">
         <Link
           to="/feed"
-          className="text-2xl font-extrabold bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 bg-clip-text text-transparent mb-8 px-2"
+          className="px-3 text-2xl font-black tracking-tight text-text-primary transition-opacity hover:opacity-80"
         >
           Snaply
         </Link>
 
-        <div className="flex flex-col gap-1">
-          {navItems.map(({ path, label, icon: Icon }) => (
+        <nav className="mt-10 flex flex-col gap-2">
+          {navItems.map(({ path, label, icon: Icon }) => {
+            const active = isActive(path);
+
+            return (
+              <Link
+                key={label}
+                to={path}
+                className={`group flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
+                  active
+                    ? "bg-brand-soft text-brand-primary"
+                    : "text-text-secondary hover:bg-surface-soft hover:text-text-primary"
+                }`}
+              >
+                <Icon
+                  size={20}
+                  strokeWidth={active ? 2.5 : 2}
+                  className="transition-transform duration-200 group-hover:scale-105"
+                />
+
+                <span>{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto">
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-text-secondary transition-all duration-200 hover:bg-error-soft hover:text-error"
+          >
+            <LogOut size={20} strokeWidth={2} />
+            <span>Log out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-border bg-white/95 px-2 backdrop-blur-xl md:hidden">
+        {navItems.map(({ path, label, icon: Icon }) => {
+          const active = isActive(path);
+
+          return (
             <Link
               key={label}
               to={path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-colors ${
-                isActive(path)
-                  ? 'bg-rose-50 text-rose-600'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              aria-label={label}
+              className={`flex h-11 w-16 flex-col items-center justify-center rounded-2xl transition-all duration-200 ${
+                active
+                  ? "bg-brand-soft text-brand-primary"
+                  : "text-text-muted hover:bg-surface-soft hover:text-text-primary"
               }`}
             >
-              <Icon size={20} strokeWidth={2} />
-              {label}
+              <Icon
+                size={22}
+                strokeWidth={active ? 2.5 : 2}
+              />
+
+              <span className="mt-0.5 text-[10px] font-semibold">
+                {label}
+              </span>
             </Link>
-          ))}
-        </div>
+          );
+        })}
 
         <button
+          type="button"
           onClick={handleLogout}
-          className="mt-auto flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-slate-500 hover:bg-slate-50 hover:text-rose-600 transition-colors"
+          aria-label="Log out"
+          className="flex h-11 w-16 flex-col items-center justify-center rounded-2xl text-text-muted transition-all duration-200 hover:bg-error-soft hover:text-error"
         >
-          <LogOut size={20} strokeWidth={2} />
-          Log out
-        </button>
-      </aside>
-
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/90 backdrop-blur-xl border-t border-slate-100 z-50 flex items-center justify-around">
-        {navItems.map(({ path, label, icon: Icon }) => (
-          <Link
-            key={label}
-            to={path}
-            className={`flex flex-col items-center gap-0.5 ${
-              isActive(path) ? 'text-rose-600' : 'text-slate-400'
-            }`}
-          >
-            <Icon size={22} strokeWidth={2} />
-          </Link>
-        ))}
-        <button onClick={handleLogout} className="flex flex-col items-center gap-0.5 text-slate-400">
           <LogOut size={22} strokeWidth={2} />
+
+          <span className="mt-0.5 text-[10px] font-semibold">
+            Logout
+          </span>
         </button>
       </nav>
     </>

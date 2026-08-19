@@ -70,6 +70,8 @@ function Profile() {
               <span className="text-slate-500">posts</span>
             </div>
           </div>
+
+          <p className="profile-bio">{/* Bio will be added later*/}</p>
         </div>
       </div>
 
