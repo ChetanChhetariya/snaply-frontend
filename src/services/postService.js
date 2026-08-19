@@ -31,6 +31,13 @@ export const unlikePost = async (postId, token) => {
   return response.data;
 };
 
+export const deletePost = async (postId, token) => {
+  const response = await api.delete(`/posts/${postId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export const addComment = async (postId, text, token) => {
   const response = await api.post(`/posts/${postId}/comments`, { text }, {
     headers: { Authorization: `Bearer ${token}` },
@@ -41,6 +48,23 @@ export const addComment = async (postId, text, token) => {
 export const getComments = async (postId, token) => {
   const response = await api.get(`/posts/${postId}/comments`, {
     headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getStories = async (token) => {
+  const response = await api.get('/stories', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const createStory = async (formData, token) => {
+  const response = await api.post('/stories', formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
   });
   return response.data;
 };
