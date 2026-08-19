@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle2,
@@ -15,6 +15,7 @@ import { signup } from "../services/authService";
 import Button from "../components/ui/Button";
 
 function Signup() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,8 +43,16 @@ function Signup() {
     }
   };
 
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, navigate]);
+
   return (
-<<<<<<< HEAD
     <main className="relative min-h-[calc(100vh-64px)] overflow-hidden bg-app-background px-4 py-12 sm:px-6 lg:py-16">
       <div
         aria-hidden="true"
@@ -298,77 +307,6 @@ function Signup() {
             </p>
           </section>
         </div>
-=======
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm bg-white/90 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.06)] border border-slate-100 rounded-3xl p-8">
-        <h2 className="text-xl font-bold text-slate-900 text-center mb-6">Create account</h2>
-
-        {error && (
-          <div className="bg-rose-50 text-rose-600 text-sm text-center py-2.5 rounded-xl mb-4">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="bg-emerald-50 text-emerald-600 text-sm text-center py-2.5 rounded-xl mb-4">
-            Account created! You can now log in.
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <div className="relative">
-            <User size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition-all"
-            />
-          </div>
-
-          <div className="relative">
-            <Mail size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition-all"
-            />
-          </div>
-
-          <div className="relative">
-            <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition-all"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-2 w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-semibold text-sm active:scale-95 transition-transform disabled:opacity-60"
-          >
-            {loading ? 'Creating account...' : 'Sign up'}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-slate-500 mt-5">
-          Already have an account?{' '}
-          <a href="/login" className="text-rose-600 font-semibold">Log in</a>
-        </p>
->>>>>>> main
       </div>
     </main>
   );

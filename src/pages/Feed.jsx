@@ -5,12 +5,13 @@ import {
   unlikePost,
   addComment,
   getComments,
+  deletePost,
 } from "../services/postService";
 import { followUser, unfollowUser } from "../services/authService";
 import { getCurrentUserId } from "../utils/Auth";
 import { Link } from "react-router-dom";
 import { Heart, MessageCircle } from "lucide-react";
-import "../components/common/post/PostCard.css";
+import StoriesBar from "../components/StoriesBar";
 
 const formatTime = (dateString) => {
   const date = new Date(dateString);
@@ -85,6 +86,51 @@ function Feed() {
     );
   };
 
+  const handleDelete = async (postId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await deletePost(postId, token);
+
+      setPosts((prevPosts) =>
+        prevPosts.filter((post) => post.id !== postId)
+      );
+
+      setComments((prevComments) => {
+        const updatedComments = { ...prevComments };
+        delete updatedComments[postId];
+        return updatedComments;
+      });
+
+      setOpenComments((prevOpenComments) => {
+        const updatedOpenComments = { ...prevOpenComments };
+        delete updatedOpenComments[postId];
+        return updatedOpenComments;
+      });
+
+      setCommentText((prevCommentText) => {
+        const updatedCommentText = { ...prevCommentText };
+        delete updatedCommentText[postId];
+        return updatedCommentText;
+      });
+
+      setBrokenImages((prevBrokenImages) => {
+        const updatedBrokenImages = { ...prevBrokenImages };
+        delete updatedBrokenImages[postId];
+        return updatedBrokenImages;
+      });
+    } catch (err) {
+      console.error("Failed to delete post:", err);
+      setError("Could not delete post");
+    }
+  };
+
   const handleToggleComments = async (postId) => {
     const isOpen = openComments[postId];
 
@@ -130,173 +176,143 @@ function Feed() {
   };
 
   return (
-    <div className="max-w-[490px] mx-auto px-4 py-6">
-      {error && <p className="text-rose-500 text-sm mb-4">{error}</p>}
+    <div className="mx-auto max-w-[500px] px-4 py-6">
+      {error && <p className="mb-4 text-sm text-error">{error}</p>}
+
+      <StoriesBar />
 
       {posts.map((post) => (
-        <div className="post-card" key={post.id}>
-          {/* Post Header */}
-          <div className="post-header">
-            <div className="post-header-left">
-              <div className="post-avatar">
+        <div
+          className="mb-6 overflow-hidden rounded-2xl border border-border bg-white shadow-card"
+          key={post.id}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary text-sm font-bold text-white">
                 {post.username.charAt(0).toUpperCase()}
               </div>
-
               <Link
                 to={`/profile/${post.user_id}`}
-                className="post-username"
+                className="text-sm font-semibold text-text-primary hover:underline"
               >
                 {post.username}
               </Link>
             </div>
 
-            <div className="post-header-right">
+            <div className="flex items-center gap-3">
               {post.user_id !== currentUserId && (
                 <button
                   type="button"
-                  className={`follow-btn ${
-                    post.followed_by_me ? "following" : ""
+                  onClick={() => handleFollow(post.user_id, post.followed_by_me)}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    post.followed_by_me
+                      ? "bg-surface-soft text-text-secondary hover:bg-border"
+                      : "bg-gradient-to-r from-brand-primary to-brand-secondary text-white"
                   }`}
-                  onClick={() =>
-                    handleFollow(
-                      post.user_id,
-                      post.followed_by_me
-                    )
-                  }
                 >
                   {post.followed_by_me ? "Following" : "Follow"}
                 </button>
               )}
 
-              <span className="post-timestamp">
-                {formatTime(post.created_at)}
-              </span>
+              {post.user_id === currentUserId && (
+                <button
+                  type="button"
+                  aria-label="Delete post"
+                  onClick={() => handleDelete(post.id)}
+                  className="text-xs font-semibold text-error hover:underline"
+                >
+                  Delete
+                </button>
+              )}
+
+              <span className="text-xs text-text-muted">{formatTime(post.created_at)}</span>
             </div>
           </div>
 
-          {/* Post Image */}
-          <div className="post-image-wrap">
+          {/* Image */}
+          <div className="aspect-square w-full bg-surface-soft">
             {brokenImages[post.id] ? (
-              <div className="post-image-fallback">📷</div>
+              <div className="flex h-full w-full items-center justify-center text-4xl text-text-muted">
+                📷
+              </div>
             ) : (
               <img
-                className="post-image"
+                className="h-full w-full object-cover"
                 src={`http://localhost:5000${post.image_url}`}
                 alt={post.caption}
-                onError={() =>
-                  setBrokenImages({
-                    ...brokenImages,
-                    [post.id]: true,
-                  })
-                }
+                onError={() => setBrokenImages({ ...brokenImages, [post.id]: true })}
               />
             )}
           </div>
 
-          {/* Post Actions */}
+          {/* Actions */}
           <div className="flex items-center gap-1 px-4 py-3">
-            {/* Like */}
             <button
               type="button"
-              aria-label={
-                post.liked_by_me ? "Unlike post" : "Like post"
-              }
-              onClick={() =>
-                handleLike(post.id, post.liked_by_me)
-              }
+              aria-label={post.liked_by_me ? "Unlike post" : "Like post"}
+              onClick={() => handleLike(post.id, post.liked_by_me)}
               className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200 active:scale-90 ${
                 post.liked_by_me
                   ? "text-brand-primary hover:bg-brand-soft"
                   : "text-text-primary hover:bg-brand-soft hover:text-brand-primary"
               }`}
             >
-              <Heart
-                size={23}
-                strokeWidth={2}
-                fill={
-                  post.liked_by_me
-                    ? "currentColor"
-                    : "none"
-                }
-              />
+              <Heart size={23} strokeWidth={2} fill={post.liked_by_me ? "currentColor" : "none"} />
             </button>
 
-            {/* Comment */}
             <button
               type="button"
               aria-label="View comments"
               onClick={() => handleToggleComments(post.id)}
               className="flex h-10 w-10 items-center justify-center rounded-full text-text-primary transition-all duration-200 hover:bg-brand-soft hover:text-brand-primary active:scale-90"
             >
-              <MessageCircle
-                size={23}
-                strokeWidth={2}
-              />
+              <MessageCircle size={23} strokeWidth={2} />
             </button>
           </div>
 
-          {/* Liked by You */}
           {post.liked_by_me && (
-            <p className="post-likes">Liked by you</p>
+            <p className="px-4 pb-1 text-sm font-semibold text-text-primary">Liked by you</p>
           )}
 
-          {/* Caption */}
           {post.caption && (
-            <p className="post-caption">
-              <strong>{post.username}</strong>{" "}
+            <p className="px-4 pb-1.5 text-sm leading-relaxed text-text-secondary">
+              <strong className="font-semibold text-text-primary">{post.username}</strong>{" "}
               {post.caption}
             </p>
           )}
 
-          {/* Comments Toggle */}
-          <p
-            className="comments-toggle"
+          <button
+            type="button"
             onClick={() => handleToggleComments(post.id)}
+            className="px-4 pb-3 text-left text-sm text-text-muted hover:text-text-secondary"
           >
-            {comments[post.id]
-              ? openComments[post.id]
-                ? "Hide comments"
-                : "View comments"
-              : "View comments"}
-          </p>
+            {comments[post.id] ? (openComments[post.id] ? "Hide comments" : "View comments") : "View comments"}
+          </button>
 
-          {/* Comments */}
           {openComments[post.id] && (
-            <div className="comments-list">
+            <div className="border-t border-border px-4 pb-4 pt-3">
               {comments[post.id] &&
                 comments[post.id].map((comment) => (
-                  <p key={comment.id} className="comment">
-                    <span className="comment-user">
-                      {comment.username}
-                    </span>
-
-                    <span className="comment-text">
-                      {comment.text}
-                    </span>
+                  <p key={comment.id} className="mb-1.5 text-sm">
+                    <span className="font-semibold text-text-primary">{comment.username}</span>{" "}
+                    <span className="text-text-secondary">{comment.text}</span>
                   </p>
                 ))}
 
-              {/* Add Comment */}
-              <div className="comment-input-row">
+              <div className="mt-3 flex items-center gap-2">
                 <input
                   type="text"
                   placeholder="Add a comment..."
                   value={commentText[post.id] || ""}
-                  onChange={(e) =>
-                    setCommentText({
-                      ...commentText,
-                      [post.id]: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setCommentText({ ...commentText, [post.id]: e.target.value })}
+                  className="flex-1 rounded-full border border-border bg-surface-soft px-4 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-brand-soft"
                 />
-
                 <button
                   type="button"
-                  className="comment-post-btn"
                   disabled={!commentText[post.id]}
-                  onClick={() =>
-                    handleCommentSubmit(post.id)
-                  }
+                  onClick={() => handleCommentSubmit(post.id)}
+                  className="text-sm font-semibold text-brand-primary disabled:opacity-40"
                 >
                   Post
                 </button>
