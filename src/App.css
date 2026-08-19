@@ -1,0 +1,29 @@
+.app {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  position: relative;
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  top: -10%;
+  left: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.08), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app::after {
+  content: '';
+  position: fixed;
+  top: 20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
